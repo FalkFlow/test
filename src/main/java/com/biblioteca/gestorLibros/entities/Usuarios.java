@@ -1,12 +1,18 @@
 package com.biblioteca.gestorLibros.entities;
 
-import java.util.Date;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class Usuarios {
 
     private Long id;
+    @NotBlank(message = "El nombre no puede estar vacio")
     private String nombre;
+    @Email(message = "Correo invalido")
+    @NotBlank(message = "El correo no puede estar vacio")
     private String correo;
+    @NotBlank(message = "La fecha no puede estar vacia")
     private String fechaMiembro;
 
     public Usuarios() {

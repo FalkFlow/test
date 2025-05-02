@@ -1,6 +1,6 @@
 package com.biblioteca.gestorLibros.controllers;
 
-
+import com.biblioteca.gestorLibros.entities.Libros;
 import com.biblioteca.gestorLibros.entities.Usuarios;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,52 +14,50 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-public class RestUsuariosController {
+public class RestBookController {
 
-    private List<Usuarios> usuarios = new ArrayList<>();
+    private List<Libros> libros = new ArrayList<>();
 
     {
-        usuarios.add(new Usuarios(1L, "Juan", "Juanito@gmail.com", "12/4/2024"));
-        usuarios.add(new Usuarios(2L, "Pedro", "Pedro@gmail.com", "22/05/2020"));
-        usuarios.add(new Usuarios(3L, "Judas", "Elvendio@gamil.com", "31/12/2019"));
+        libros.add(new Libros(1L, "Juan y la ballena", "Pablo Coelho", "La paquita", 2));
+        libros.add(new Libros(2L, "Juan y la ballena parte 2", "Pablo Coelho", "La paquita", 1));
     }
 
-    @GetMapping("/usuarios")
-    public ResponseEntity<Map<String, Object>> usuarios() {
+    @GetMapping("/libros")
+    public ResponseEntity<Map<String, Object>> libros() {
         Map<String, Object> data = new HashMap<>();
         data.put("Mensaje", "Usuarios encontrados");
-        data.put("Usuarios", usuarios);
+        data.put("Usuarios", libros);
         data.put("estatus",200);
         return ResponseEntity.ok(data);
     }
-
-    @GetMapping("/usuarios/{id}")
-    public ResponseEntity<Map<String, Object>> usuario(@PathVariable Long id) {
+    @GetMapping("/libros/{id}")
+    public ResponseEntity<Map<String, Object>> libros(@PathVariable Long id) {
         Map<String, Object> data = new HashMap<>();
 
-        Usuarios usuarioEncontrado = null;
-        for(Usuarios usuario : usuarios){
-            if(usuario.getId() == id){
-                usuarioEncontrado = usuario;
+        Libros libroEncontrado = null;
+        for(Libros libro : libros){
+            if(libro.getId().equals(id)){
+                libroEncontrado = libro;
                 break;
             }
         }
 
-        if(usuarioEncontrado != null){
+        if(libroEncontrado != null){
             data.put("Mensaje", "Usuario encontrado");
-            data.put("Usuario", usuarioEncontrado);
+            data.put("Usuario", libroEncontrado);
             data.put("estatus",200);
             return ResponseEntity.ok(data);
         }else{
             data.put("Mensaje", "Usuario no encontrado");
-            data.put("Usuario", usuarioEncontrado);
+            data.put("Usuario", libroEncontrado);
             data.put("estatus",404);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(data);
         }
     }
 
-    @PostMapping("/usuarios")
-    public ResponseEntity<Map<String, Object>> addUsuario(@Valid @RequestBody Usuarios usuario, BindingResult result) {
+    @PostMapping("/libros")
+    public ResponseEntity<Map<String, Object>> addLibros(@Valid @RequestBody Libros libro, BindingResult result) {
         Map<String, Object> data = new HashMap<>();
 
         if (result.hasErrors()) {
@@ -72,39 +70,39 @@ public class RestUsuariosController {
             }));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(data);
         }
-        usuarios.add(usuario);
+        libros.add(libro);
         data.put("Mensaje", "Usuario agregado");
-        data.put("Usuarios", usuario);
+        data.put("Usuarios", libro);
         data.put("estatus", 201);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(data);
     }
 
-    @PutMapping("/usuarios/{id}")
-    public ResponseEntity<Map<String, Object>> actualizarUsuario(@PathVariable Long id, @RequestBody Usuarios datosActualizados) {
+    @PutMapping("/libros/{id}")
+    public ResponseEntity<Map<String, Object>> actualizarLibros(@PathVariable Long id, @RequestBody Libros datosActualizados) {
         Map<String, Object> data = new HashMap<>();
 
-        Usuarios usuarioEncontrado = null;
-        for (Usuarios usuario : usuarios) {
-            if (usuario.getId().equals(id)) {
-                usuarioEncontrado = usuario;
+        Libros libroEncontrado = null;
+        for (Libros libro : libros) {
+            if (libro.getId().equals(id)) {
+                libroEncontrado = libro;
                 break;
             }
         }
 
-        if (usuarioEncontrado != null) {
-            if (datosActualizados.getNombre() != null) {
-                usuarioEncontrado.setNombre(datosActualizados.getNombre());
+        if (libroEncontrado != null) {
+            if (datosActualizados.getTitulo() != null) {
+                libroEncontrado.setTitulo(datosActualizados.getTitulo());
             }
-            if (datosActualizados.getCorreo() != null) {
-                usuarioEncontrado.setCorreo(datosActualizados.getCorreo());
+            if (datosActualizados.getAutor() != null) {
+                libroEncontrado.setAutor(datosActualizados.getAutor());
             }
-            if (datosActualizados.getFechaMiembro() != null) {
-                usuarioEncontrado.setFechaMiembro(datosActualizados.getFechaMiembro());
+            if (datosActualizados.getISBN() != null) {
+                libroEncontrado.setISBN(datosActualizados.getISBN());
             }
 
             data.put("mensaje", "Usuario actualizado");
-            data.put("usuario", usuarioEncontrado);
+            data.put("usuario", libroEncontrado);
             data.put("estatus", 200);
             return ResponseEntity.ok(data);
         } else {
@@ -114,23 +112,23 @@ public class RestUsuariosController {
         }
     }
 
-    @DeleteMapping("/usuarios/{id}")
-    public ResponseEntity<Map<String, Object>> eliminarUsuario(@PathVariable Long id) {
+    @DeleteMapping("/libros/{id}")
+    public ResponseEntity<Map<String, Object>> eliminarLibro(@PathVariable Long id) {
         Map<String, Object> data = new HashMap<>();
 
-        Usuarios usuarioEncontrado = null;
-        for (Usuarios usuario : usuarios) {
-            if (usuario.getId().equals(id)) {
-                usuarioEncontrado = usuario;
+        Libros libroEncontrado = null;
+        for (Libros libro : libros) {
+            if (libro.getId().equals(id)) {
+                libroEncontrado = libro;
                 break;
             }
         }
 
-        if (usuarioEncontrado != null) {
-            usuarios.remove(usuarioEncontrado);
+        if (libroEncontrado != null) {
+            libros.remove(libroEncontrado);
 
             data.put("mensaje", "Usuario eliminado");
-            data.put("usuarioEliminado", usuarioEncontrado);
+            data.put("usuarioEliminado", libroEncontrado);
             data.put("estatus", 200);
             return ResponseEntity.ok(data);
         } else {
@@ -140,3 +138,4 @@ public class RestUsuariosController {
         }
     }
 }
+

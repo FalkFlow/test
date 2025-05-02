@@ -1,11 +1,20 @@
 package com.biblioteca.gestorLibros.entities;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 public class Libros {
 
     private Long id;
+    @NotBlank(message = "El titulo no puede estar en blanco")
     private String titulo;
+    @NotBlank(message = "El autor no puede estar en blanco")
     private String autor;
+    @NotBlank(message = "El ISBN no puede estar en blanco")
     private String ISBN;
+    @NotNull(message = "Tiene que haber copias disponibles para ingresar")
+    @Min(value = 1, message = "Debe haber almenos una copia disponible")
     private int copiarDisponibles;
 
     public Libros() {
