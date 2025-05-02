@@ -15,12 +15,12 @@ public class Libros {
     private String ISBN;
     @NotNull(message = "Tiene que haber copias disponibles para ingresar")
     @Min(value = 1, message = "Debe haber almenos una copia disponible")
-    private int copiarDisponibles;
+    private Integer copiarDisponibles;
 
     public Libros() {
     }
 
-    public Libros(Long id, String titulo, String autor, String ISBN, int copiarDisponibles) {
+    public Libros(Long id, String titulo, String autor, String ISBN, Integer copiarDisponibles) {
         this.id = id;
         this.titulo = titulo;
         this.autor = autor;
@@ -60,11 +60,11 @@ public class Libros {
         this.ISBN = ISBN;
     }
 
-    public int getCopiarDisponibles() {
+    public Integer getCopiarDisponibles() {
         return copiarDisponibles;
     }
 
-    public void setCopiarDisponibles(int copiarDisponibles) {
+    public void setCopiarDisponibles(Integer copiarDisponibles) {
         this.copiarDisponibles = copiarDisponibles;
     }
 }

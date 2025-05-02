@@ -1,6 +1,7 @@
 package com.biblioteca.gestorLibros.controllers;
 
 
+import com.biblioteca.gestorLibros.Data.DatStore;
 import com.biblioteca.gestorLibros.entities.Usuarios;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,27 +9,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.BindingResult;
 
 import jakarta.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 public class RestUsuariosController {
 
-    private List<Usuarios> usuarios = new ArrayList<>();
-
-    {
-        usuarios.add(new Usuarios(1L, "Juan", "Juanito@gmail.com", "12/4/2024"));
-        usuarios.add(new Usuarios(2L, "Pedro", "Pedro@gmail.com", "22/05/2020"));
-        usuarios.add(new Usuarios(3L, "Judas", "Elvendio@gamil.com", "31/12/2019"));
-    }
-
     @GetMapping("/usuarios")
     public ResponseEntity<Map<String, Object>> usuarios() {
         Map<String, Object> data = new HashMap<>();
         data.put("Mensaje", "Usuarios encontrados");
-        data.put("Usuarios", usuarios);
+        data.put("Usuarios", DatStore.usuarios);
         data.put("estatus",200);
         return ResponseEntity.ok(data);
     }
@@ -37,13 +28,10 @@ public class RestUsuariosController {
     public ResponseEntity<Map<String, Object>> usuario(@PathVariable Long id) {
         Map<String, Object> data = new HashMap<>();
 
-        Usuarios usuarioEncontrado = null;
-        for(Usuarios usuario : usuarios){
-            if(usuario.getId() == id){
-                usuarioEncontrado = usuario;
-                break;
-            }
-        }
+        Usuarios usuarioEncontrado = DatStore.usuarios.stream()
+                .filter(u -> u.getId().equals(id))
+                .findFirst()
+                .orElse(null);
 
         if(usuarioEncontrado != null){
             data.put("Mensaje", "Usuario encontrado");
@@ -72,7 +60,7 @@ public class RestUsuariosController {
             }));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(data);
         }
-        usuarios.add(usuario);
+        DatStore.usuarios.add(usuario);
         data.put("Mensaje", "Usuario agregado");
         data.put("Usuarios", usuario);
         data.put("estatus", 201);
@@ -84,13 +72,10 @@ public class RestUsuariosController {
     public ResponseEntity<Map<String, Object>> actualizarUsuario(@PathVariable Long id, @RequestBody Usuarios datosActualizados) {
         Map<String, Object> data = new HashMap<>();
 
-        Usuarios usuarioEncontrado = null;
-        for (Usuarios usuario : usuarios) {
-            if (usuario.getId().equals(id)) {
-                usuarioEncontrado = usuario;
-                break;
-            }
-        }
+        Usuarios usuarioEncontrado = DatStore.usuarios.stream()
+                .filter(u -> u.getId().equals(id))
+                .findFirst()
+                .orElse(null);
 
         if (usuarioEncontrado != null) {
             if (datosActualizados.getNombre() != null) {
@@ -118,16 +103,13 @@ public class RestUsuariosController {
     public ResponseEntity<Map<String, Object>> eliminarUsuario(@PathVariable Long id) {
         Map<String, Object> data = new HashMap<>();
 
-        Usuarios usuarioEncontrado = null;
-        for (Usuarios usuario : usuarios) {
-            if (usuario.getId().equals(id)) {
-                usuarioEncontrado = usuario;
-                break;
-            }
-        }
+        Usuarios usuarioEncontrado = DatStore.usuarios.stream()
+                .filter(u -> u.getId().equals(id))
+                .findFirst()
+                .orElse(null);
 
         if (usuarioEncontrado != null) {
-            usuarios.remove(usuarioEncontrado);
+            DatStore.usuarios.remove(usuarioEncontrado);
 
             data.put("mensaje", "Usuario eliminado");
             data.put("usuarioEliminado", usuarioEncontrado);
